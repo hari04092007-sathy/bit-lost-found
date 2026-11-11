@@ -20,10 +20,12 @@ DEPARTMENTS = ["CSE", "IT", "AI & DS", "ECE", "EEE", "Mechanical", "Civil", "Bio
 ERR_DOMAIN = "Please register using your official BIT email ID."
 
 app = Flask(__name__)
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 app.config.update(SECRET_KEY=os.environ.get("SECRET_KEY") or os.urandom(24).hex(),
     SQLALCHEMY_DATABASE_URI=os.environ.get("DATABASE_URL", "sqlite:///dev.db"),
     MAX_CONTENT_LENGTH=2 * 1024 * 1024, UPLOAD_DIR=os.path.join(BASE, "static", "uploads"),
-    SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
+    SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax", SESSION_COOKIE_SECURE=bool(os.environ.get("HTTPS_ONLY")))
 db.init_app(app)
 ser = URLSafeTimedSerializer(app.config["SECRET_KEY"])
 lm = LoginManager(app); lm.login_view = "login"; lm.login_message = "Please log in to continue."
