@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<section class="hero"><div><h1>Lost something? Let's find it.</h1>
+<p class="lead">Report what you lost or found on the BIT campus, and get matched with the right person.</p>
+<form class="search" action="{{ url_for('browse') }}"><input name="q" placeholder="Search: blue water bottle, ID card, calculator" aria-label="Search items"><button class="btn">Search</button></form>
+<div class="actions"><a class="btn" href="{{ url_for('report', kind='lost') }}">Report lost item</a><a class="btn ghost" href="{{ url_for('report', kind='found') }}">Report found item</a></div></div>
+<dl class="stats"><div><dt>Total reports</dt><dd>{{ stats.total }}</dd></div><div><dt>Recovered</dt><dd>{{ stats.recovered }}</dd></div><div><dt>Pending claims</dt><dd>{{ stats.pending }}</dd></div></dl></section>
+<h2>Recently reported</h2>
+{% if recent %}<div class="grid">{% for it in recent %}{% include "_card.html" %}{% endfor %}</div>{% else %}<p class="empty">Nothing has been approved yet. <a href="{{ url_for('report', kind='found') }}">Report the first found item.</a></p>{% endif %}
+<h2>Categories</h2><div class="chips">{% for c,n in cats %}<a href="{{ url_for('browse', category=c.id) }}">{{ c.name }} <b>{{ n }}</b></a>{% endfor %}</div>
+<h2>How it works</h2><ol class="steps"><li><b>Report.</b> Log in with your BIT email and describe the item.</li><li><b>Review.</b> An admin approves the report before it goes public.</li><li><b>Match.</b> The portal suggests likely lost and found pairs.</li><li><b>Claim.</b> The owner answers verification questions; the reporter or an admin confirms.</li></ol>{% endblock %}

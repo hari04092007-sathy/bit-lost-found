@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block body %}<h1>Hello, {{ current_user.name.split()[0] }}</h1><p class="muted">{{ current_user.department }}, year {{ current_user.year }}</p>
+<div class="actions"><a class="btn" href="{{ url_for('report', kind='lost') }}">Report lost item</a><a class="btn ghost" href="{{ url_for('report', kind='found') }}">Report found item</a></div>
+<h2>My reports</h2>{% for it in mine %}<div class="row-card"><div><a href="{{ url_for('item', i=it.id) }}"><b>{{ it.name }}</b></a> <span class="tag {{ it.kind }}">{{ it.kind }}</span> <span class="tag">{{ it.status }}</span>
+{% for s,m in suggestions.get(it.id,[]) %}<div class="muted">Possible match ({{ s }}%): <a href="{{ url_for('item', i=m.id) }}">{{ m.name }}</a></div>{% endfor %}
+{% for c in it.claims if c.status=='pending' %}<div class="claim"><b>{{ c.claimant.name }}</b> ({{ c.claimant.department }}): {{ c.details }}
+<form method="post" action="{{ url_for('decide', c=c.id, action='approve') }}"><button class="btn sm">Approve</button></form><form method="post" action="{{ url_for('decide', c=c.id, action='reject') }}"><button class="btn sm ghost">Reject</button></form></div>{% endfor %}</div></div>
+{% else %}<p class="empty">You have not reported anything yet.</p>{% endfor %}
+<h2>My claims</h2>{% for c in claims %}<div class="row-card"><a href="{{ url_for('item', i=c.item_id) }}">{{ c.item.name }}</a><span class="tag">{{ c.status }}</span></div>{% else %}<p class="empty">No claims submitted.</p>{% endfor %}{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block body %}<form method="post" class="form narrow"><h1>{{ 'Admin log in' if admin else 'Log in' }}</h1>
+<label>{{ 'Email' if admin else 'BIT email' }}<input type="email" name="email" required {% if not admin %}pattern="[A-Za-z0-9._%+\-]+@bitsathy\.ac\.in"{% endif %}></label>
+<label>Password<input type="password" name="password" required></label><button class="btn">Log in</button>
+{% if not admin %}<p><a href="{{ url_for('forgot') }}">Forgot password?</a> &nbsp; <a href="{{ url_for('register') }}">Create account</a></p>{% endif %}</form>
+{% if unverified %}<form method="post" action="{{ url_for('resend') }}" class="narrow"><input type="hidden" name="email" value="{{ unverified }}"><button class="btn ghost">Resend verification email</button></form>{% endif %}{% endblock %}

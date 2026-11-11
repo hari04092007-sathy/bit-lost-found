@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block body %}<article class="detail">
+<div>{% if it.photo %}<img src="{{ url_for('static', filename='uploads/'+it.photo) }}" alt="{{ it.name }}">{% else %}<div class="noimg big">{{ it.category.name }}</div>{% endif %}</div>
+<div><span class="tag {{ it.kind }}">{{ it.kind|capitalize }}</span> <span class="tag {{ 'rec' if it.status=='recovered' }}">{{ it.status|capitalize }}</span>
+<h1>{{ it.name }}</h1><p>{{ it.description }}</p>
+<dl class="meta"><dt>Category</dt><dd>{{ it.category.name }}</dd><dt>Location</dt><dd>{{ it.location }}</dd><dt>Date</dt><dd>{{ it.event_date.strftime('%d %b %Y') }}</dd><dt>Reported by</dt><dd>{{ it.reporter.name.split()[0] }}, {{ it.reporter.department }}</dd>
+{% if can_see_private(it) %}<dt>Contact</dt><dd>{{ it.contact }}</dd>{% if it.extra %}<dt>Private notes</dt><dd>{{ it.extra }}</dd>{% endif %}{% endif %}</dl>
+{% if current_user.is_authenticated and current_user.role=='admin' %}<p class="muted">Admin view: manage this report from the admin dashboard.</p>
+{% elif it.status=='approved' and current_user.is_authenticated and it.reporter_id!=current_user.id %}
+ {% if mine %}<p class="flash info">Your claim is {{ mine.status }}.</p>{% else %}
+ <form method="post" action="{{ url_for('claim', i=it.id) }}" class="form"><h3>{{ 'This is mine' if it.kind=='found' else 'I found this' }}</h3>
+ <label>Verification details<textarea name="details" rows="3" required minlength="15" placeholder="Describe marks, contents, serial number or anything only the owner would know"></textarea></label><button class="btn">Submit claim</button></form>{% endif %}
+{% elif it.status=='approved' and not current_user.is_authenticated %}<a class="btn" href="{{ url_for('login') }}">Log in to claim</a>{% endif %}</div></article>
+{% if matches %}<h2>Possible matches</h2><p class="muted">Scored on category, name, description keywords, location and dates.</p><div class="grid">{% for s,it in matches %}<div class="scored"><span class="score">{{ s }}%</span>{% include "_card.html" %}</div>{% endfor %}</div>{% endif %}{% endblock %}

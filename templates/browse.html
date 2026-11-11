@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block body %}<h1>Browse items</h1>
+<form class="filters" method="get"><input name="q" value="{{ a.q }}" placeholder="Search" aria-label="Search">
+<select name="kind"><option value="">Lost and found</option><option value="lost" {{ 'selected' if a.kind=='lost' }}>Lost</option><option value="found" {{ 'selected' if a.kind=='found' }}>Found</option></select>
+<select name="category"><option value="">All categories</option>{% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if a.category==c.id|string }}>{{ c.name }}</option>{% endfor %}</select>
+<select name="location"><option value="">All locations</option>{% for l in LOCATIONS %}<option {{ 'selected' if a.location==l }}>{{ l }}</option>{% endfor %}</select>
+<select name="status"><option value="">Any status</option><option value="approved" {{ 'selected' if a.status=='approved' }}>Open</option><option value="recovered" {{ 'selected' if a.status=='recovered' }}>Recovered</option></select>
+<input type="date" name="from" value="{{ a['from'] }}" aria-label="From date"><input type="date" name="to" value="{{ a.to }}" aria-label="To date"><button class="btn sm">Apply</button></form>
+{% if items %}<div class="grid">{% for it in items %}{% include "_card.html" %}{% endfor %}</div>{% else %}<p class="empty">No items match these filters. Try removing one.</p>{% endif %}{% endblock %}

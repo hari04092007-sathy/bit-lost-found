@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}<form method="post" enctype="multipart/form-data" class="form narrow"><h1>Report {{ kind }} item</h1>
+<label>Item name<input name="name" value="{{ f.name }}" required maxlength="120"></label>
+<div class="row"><label>Category<select name="category" required>{% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if f.category==c.id|string }}>{{ c.name }}</option>{% endfor %}</select></label>
+<label>Date {{ kind }}<input type="date" name="date" value="{{ f.date }}" max="{{ now }}" required></label></div>
+<label>{{ 'Last seen' if kind=='lost' else 'Found' }} location<select name="location" required>{% for l in LOCATIONS %}<option {{ 'selected' if f.location==l }}>{{ l }}</option>{% endfor %}</select></label>
+<label>Description<textarea name="description" rows="4" required minlength="10" maxlength="2000">{{ f.description }}</textarea></label>
+<label>Photograph (PNG, JPG or WEBP, up to 2 MB)<input type="file" name="photo" accept="image/png,image/jpeg,image/webp"></label>
+<label>Contact (private; defaults to your BIT email)<input name="contact" value="{{ f.contact }}" maxlength="150"></label>
+<label>{{ 'Identifying details for verification (private)' if kind=='found' else 'Private notes' }}<textarea name="extra" rows="2" maxlength="1000">{{ f.extra }}</textarea></label>
+<button class="btn">Submit report</button></form>{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block body %}<form method="post" class="form narrow"><h1>Create your account</h1>
+<label>Full name<input name="name" value="{{ f.name }}" required minlength="3" maxlength="100"></label>
+<label>BIT email<input type="email" name="email" value="{{ f.email }}" required pattern="[A-Za-z0-9._%+\-]+@bitsathy\.ac\.in" title="Use your @bitsathy.ac.in email" placeholder="name@bitsathy.ac.in"></label>
+<div class="row"><label>Department<select name="department" required>{% for d in depts %}<option {{ 'selected' if f.department==d }}>{{ d }}</option>{% endfor %}</select></label>
+<label>Year<select name="year" required>{% for y in (1,2,3,4) %}<option {{ 'selected' if f.year==y|string }}>{{ y }}</option>{% endfor %}</select></label></div>
+<label>Password<input type="password" name="password" required minlength="8"></label><label>Confirm password<input type="password" name="confirm" required minlength="8"></label>
+<button class="btn">Register</button><p class="muted">We email a link to confirm you own this address. You cannot log in until you open it.</p></form>{% endblock %}

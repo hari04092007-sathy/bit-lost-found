@@ -1,0 +1,4 @@
+<a class="card item" href="{{ url_for('item', i=it.id) }}">
+{% if it.photo %}<img src="{{ url_for('static', filename='uploads/'+it.photo) }}" alt="" loading="lazy">{% else %}<div class="noimg">{{ it.category.name }}</div>{% endif %}
+<div class="body"><span class="tag {{ it.kind }}">{{ it.kind|capitalize }}</span>{% if it.status=='recovered' %}<span class="tag rec">Recovered</span>{% endif %}
+<h3>{{ it.name }}</h3><p class="muted">{{ it.location }}, {{ it.event_date.strftime('%d %b %Y') }}</p></div></a>
